@@ -1,0 +1,811 @@
+{
+	"info": {
+		"_postman_id": "93a3f703-a417-4459-9854-11a82fbbfc55",
+		"name": "productdomain",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25174678",
+		"_collection_link": "https://www.postman.com/blue-moon-857186/workspace/prep-api-testing/collection/25174678-93a3f703-a417-4459-9854-11a82fbbfc55?action=share&source=collection_link&creator=25174678"
+	},
+	"item": [
+		{
+			"name": "Get API Products list",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Set the variable {{productdomain}} as www.facebook.com in the pre-request script.\r",
+							"pm.environment.set(\"productdomain\", \"https://api.restful-api.dev/objects\");"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 500ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.expect(pm.response.code).to.equal(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response time is less than 1000ms\", function () {\r",
+							"  pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Validate the response schema for id, name, data.color, and data.capacity\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('array').that.is.not.empty;\r",
+							"    \r",
+							"    responseData.forEach(item => {\r",
+							"        pm.expect(item).to.have.property('id').that.is.a('string');\r",
+							"        pm.expect(item).to.have.property('name').that.is.a('string');\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Ensure the response content type is application/json\", function () {\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Verify that the id, name, color, and capacity are non-empty strings\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('array').that.is.not.empty;\r",
+							"    \r",
+							"    responseData.forEach(function(item) {\r",
+							"        pm.expect(item.id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"ID should not be empty\");\r",
+							"        pm.expect(item.name).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Name should not be empty\");\r",
+							"\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{productdomain}}",
+					"host": [
+						"{{productdomain}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get API Products list by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.expect(pm.response.code).to.equal(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Content-Type header is application/json\", function () {\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response time is in an acceptable range\", function () {\r",
+							"  pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response has the required fields - id, name, data\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseData).to.be.an('array');\r",
+							"    responseData.forEach(function(item) {\r",
+							"        pm.expect(item).to.have.property('id');\r",
+							"        pm.expect(item).to.have.property('name');\r",
+							"        pm.expect(item).to.have.property('data');\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Data fields - color and capacity GB are present and in the expected format\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData).to.be.an('array').that.is.not.empty;\r",
+							"\r",
+							"  responseData.forEach(function(item) {\r",
+							"    pm.expect(item).to.have.property('data');\r",
+							"  });\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"pm.test(\"Name is 'Samsung Galaxy Z Fold2' for ID number 5\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    responseData.forEach(function(item) {\r",
+							"        if (item.id === \"5\") {\r",
+							"            pm.expect(item.name).to.equal('Samsung Galaxy Z Fold2');\r",
+							"        }\r",
+							"    });\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{productdomain}}?id=3&id=5&id=10",
+					"host": [
+						"{{productdomain}}"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "3"
+						},
+						{
+							"key": "id",
+							"value": "5"
+						},
+						{
+							"key": "id",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get API Single product",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.expect(pm.response.code).to.equal(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response time is within an acceptable range\", function () {\r",
+							"  pm.expect(pm.response.responseTime).to.be.below(900);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Id, name, and data are required fields\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.have.property('id');\r",
+							"    pm.expect(responseData).to.have.property('name');\r",
+							"    pm.expect(responseData).to.have.property('data');\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Year is a non-negative integer\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData.data.year).to.be.a('number');\r",
+							"  pm.expect(responseData.data.year).to.be.at.least(0);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Price is a non-negative number\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData.data.price).to.be.a('number').and.to.be.at.least(0);\r",
+							"});\r",
+							"pm.test(\"Hard disk size and CPU model have string values\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseData.data[\"Hard disk size\"]).to.be.a('string');\r",
+							"    pm.expect(responseData.data[\"CPU model\"]).to.be.a('string');\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{productdomain}}/7",
+					"host": [
+						"{{productdomain}}"
+					],
+					"path": [
+						"7"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create single  product  Post req",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"randomname\", `Sriman${Math.floor(Math.random() * 10)}`);\r",
+							"pm.environment.set(\"randomyear\", Math.floor(Math.random() * (2024 - 2000 + 1)) + 2000);\r",
+							"pm.environment.set(\"randompriceinnumbers\", Math.floor(Math.random() * (1000 - 100 + 1)) + 100);\r",
+							"pm.environment.set(\"randomcpuname\", `snapdragon${Math.floor(Math.random() * 10000)}`);\r",
+							"pm.environment.set(\"randomstorage\", `${Math.floor(Math.random() * 10)} TB`);\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"\r",
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Id is a non-empty string\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData).to.be.an('object');\r",
+							"  pm.expect(responseData.id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Id should not be empty\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"pm.test(\"Data object contains year and price fields\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData.data).to.be.an('object');\r",
+							"    pm.expect(responseData.data).to.include.all.keys('year', 'price');\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"pm.environment.set(\"Newlycreatedproduct\", pm.response.json().id);\r",
+							"\r",
+							"let response = pm.response.json();\r",
+							"pm.environment.set(\"name\", response.name);\r",
+							"pm.environment.set(\"year\", response.data.year);\r",
+							"pm.environment.set(\"price\", response.data.price);\r",
+							"pm.environment.set(\"CPU_model\", response.data[\"CPU model\"]);\r",
+							"pm.environment.set(\"Hard_disk_size\", response.data[\"Hard disk size\"]);\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"{{randomname}}\",\r\n    \"data\": {\r\n        \"year\": {{randomyear}},\r\n        \"price\": {{randompriceinnumbers}},\r\n        \"CPU model\": \"{{randomcpuname}}\",\r\n        \"Hard disk size\": \"{{randomstorage}}\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{productdomain}}",
+					"host": [
+						"{{productdomain}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get API Single product after POST",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//After POST API validating the created product details using the Auto saved environment variables.\r",
+							"\r",
+							"\r",
+							"let getResponse = pm.response.json();\r",
+							"\r",
+							"\r",
+							"// Validate Name\r",
+							"pm.test(\"Name Matched\", function() {\r",
+							"    pm.expect(getResponse.name).to.eql(pm.environment.get(\"name\"));\r",
+							"});\r",
+							"\r",
+							"// Validate Year\r",
+							"pm.test(\"Year matched\", function() {\r",
+							"    pm.expect(getResponse.data.year).to.eql(Number(pm.environment.get(\"year\")));\r",
+							"});\r",
+							"\r",
+							"// Validate Price\r",
+							"pm.test(\"Price matched\", function() {\r",
+							"    pm.expect(getResponse.data.price).to.eql(Number(pm.environment.get(\"price\")));\r",
+							"});\r",
+							"\r",
+							"// Validate CPU model\r",
+							"pm.test(\"CPU model matched\", function() {\r",
+							"    pm.expect(getResponse.data[\"CPU model\"]).to.eql(pm.environment.get(\"CPU_model\"));\r",
+							"});\r",
+							"\r",
+							"// Validate Hard disk size\r",
+							"pm.test(\"Hard disk size matched\", function() {\r",
+							"    pm.expect(getResponse.data[\"Hard disk size\"]).to.eql(pm.environment.get(\"Hard_disk_size\"));\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{productdomain}}/{{Newlycreatedproduct}}",
+					"host": [
+						"{{productdomain}}"
+					],
+					"path": [
+						"{{Newlycreatedproduct}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put single product",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response = pm.response.json();\r",
+							"pm.environment.set(\"putname\", response.name);\r",
+							"pm.environment.set(\"putyear\", response.data.year);\r",
+							"pm.environment.set(\"putprice\", response.data.price);\r",
+							"pm.environment.set(\"putcpu-model\", response.data[\"CPU model\"]);\r",
+							"pm.environment.set(\"puthard-disk-size\", response.data[\"Hard disk size\"]);\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"  pm.expect(pm.response.responseTime).to.be.below(10000);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Validate the response schema for id, name, updatedAt, data.year, data.price, data['CPU model'], and data['Hard disk size']\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"\r",
+							"  pm.expect(responseData).to.be.an('object');\r",
+							"  pm.expect(responseData.id).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.name).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.updatedAt).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.data).to.exist.and.to.be.an('object');\r",
+							"  pm.expect(responseData.data.year).to.exist.and.to.be.a('number');\r",
+							"  pm.expect(responseData.data.price).to.exist.and.to.be.a('number');\r",
+							"  pm.expect(responseData.data['CPU model']).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.data['Hard disk size']).to.exist.and.to.be.a('string');\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Id and name should be non-empty strings\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData.id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Id should not be empty\");\r",
+							"  pm.expect(responseData.name).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Name should not be empty\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"{{name}}\",\r\n    \"data\": {\r\n        \"year\": 7608,\r\n        \"price\": {{price}},\r\n        \"CPU model\": \"mac os 76\",\r\n        \"Hard disk size\": \"10 TB\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{productdomain}}/{{Newlycreatedproduct}}",
+					"host": [
+						"{{productdomain}}"
+					],
+					"path": [
+						"{{Newlycreatedproduct}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get API Single product after PUT",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let getResponse = pm.response.json();\r",
+							"\r",
+							"\r",
+							"// Validate Name\r",
+							"pm.test(\"Name Matched\", function() {\r",
+							"    pm.expect(getResponse.name).to.eql(pm.environment.get(\"putname\"));\r",
+							"});\r",
+							"\r",
+							"// Validate Year\r",
+							"pm.test(\"Year matched\", function() {\r",
+							"    pm.expect(getResponse.data.year).to.eql(Number(pm.environment.get(\"putyear\")));\r",
+							"});\r",
+							"\r",
+							"// Validate Price\r",
+							"pm.test(\"Price matched\", function() {\r",
+							"    pm.expect(getResponse.data.price).to.eql(Number(pm.environment.get(\"putprice\")));\r",
+							"});\r",
+							"\r",
+							"// Validate CPU model\r",
+							"pm.test(\"CPU model matched\", function() {\r",
+							"    pm.expect(getResponse.data[\"CPU model\"]).to.eql(pm.environment.get(\"putcpu-model\"));\r",
+							"});\r",
+							"\r",
+							"// Validate Hard disk size\r",
+							"pm.test(\"Hard disk size matched\", function() {\r",
+							"    pm.expect(getResponse.data[\"Hard disk size\"]).to.eql(pm.environment.get(\"puthard-disk-size\"));\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{productdomain}}/{{Newlycreatedproduct}}",
+					"host": [
+						"{{productdomain}}"
+					],
+					"path": [
+						"{{Newlycreatedproduct}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Patch Single product",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"randomcpuname\", `snapdragon${Math.floor(Math.random() * 10000)}`);\r",
+							"pm.environment.set(\"randomstorage\", `${Math.floor(Math.random() * 10)} TB`);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response has the required fields\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData).to.be.an('object');\r",
+							"  pm.expect(responseData.id).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.name).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.updatedAt).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.data).to.exist.and.to.be.an('object');\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Validate the data object schema\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('object');\r",
+							"    pm.expect(responseData.data).to.exist.and.to.be.an('object');\r",
+							"\r",
+							"    // Check for non-negative integer year\r",
+							"    pm.expect(responseData.data.year).to.exist.and.to.be.a('number').and.to.be.at.least(0);\r",
+							"\r",
+							"    // Check for non-negative number price\r",
+							"    pm.expect(responseData.data.price).to.exist.and.to.be.a('number').and.to.be.at.least(0);\r",
+							"\r",
+							"    // Check for non-empty string CPU model\r",
+							"    pm.expect(responseData.data['CPU model']).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1);\r",
+							"\r",
+							"    // Check for non-empty string Hard disk size\r",
+							"    pm.expect(responseData.data['Hard disk size']).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"  pm.expect(pm.response.responseTime).to.be.below(900);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"let response = pm.response.json();\r",
+							"pm.environment.set(\"patch_id\", response.id);\r",
+							"pm.environment.set(\"patch_name\", response.name);\r",
+							"pm.environment.set(\"patch_year\", response.data.year);\r",
+							"pm.environment.set(\"patch_price\", response.data.price);\r",
+							"pm.environment.set(\"patch_cpu_model\", response.data[\"CPU model\"]);\r",
+							"pm.environment.set(\"patch_hard_disk_size\", response.data[\"Hard disk size\"]);\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"{{putname}}\",\r\n    \"data\": {\r\n        \"year\": {{putyear}},\r\n        \"price\": {{putprice}},\r\n        \"CPU model\": \"{{randomcpuname}}\",\r\n        \"Hard disk size\": \"{{randomstorage}}\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{productdomain}}/{{Newlycreatedproduct}}",
+					"host": [
+						"{{productdomain}}"
+					],
+					"path": [
+						"{{Newlycreatedproduct}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get API Single product after PATCH",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let getResponse = pm.response.json();\r",
+							"\r",
+							"// Validate ID\r",
+							"pm.test(\"Post Request ID matched\", function() {\r",
+							"    pm.expect(getResponse.id).to.eql(pm.environment.get(\"patch_id\"));\r",
+							"});\r",
+							"\r",
+							"// Validate Name\r",
+							"pm.test(\"Post resquest Name Matched\", function() {\r",
+							"    pm.expect(getResponse.name).to.eql(pm.environment.get(\"patch_name\"));\r",
+							"});\r",
+							"\r",
+							"// Validate Year\r",
+							"pm.test(\"Post request Year matched\", function() {\r",
+							"    pm.expect(getResponse.data.year).to.eql(Number(pm.environment.get(\"patch_year\")));\r",
+							"});\r",
+							"\r",
+							"// Validate Price\r",
+							"pm.test(\"Post request Price matched\", function() {\r",
+							"    pm.expect(getResponse.data.price).to.eql(Number(pm.environment.get(\"patch_price\")));\r",
+							"});\r",
+							"\r",
+							"// Validate CPU model\r",
+							"pm.test(\"Post request CPU model matched\", function() {\r",
+							"    pm.expect(getResponse.data[\"CPU model\"]).to.eql(pm.environment.get(\"patch_cpu_model\"));\r",
+							"});\r",
+							"\r",
+							"// Validate Hard disk size\r",
+							"pm.test(\"Post request Hard disk size matched\", function() {\r",
+							"    pm.expect(getResponse.data[\"Hard disk size\"]).to.eql(pm.environment.get(\"patch_hard_disk_size\"));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Post Request Response status code is 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response time is less than 5000ms\", function () {\r",
+							"  pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Validate the schema for id, name, year, price, CPU model, and Hard disk size fields\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseData).to.be.an('object');\r",
+							"    pm.expect(responseData.id).to.exist.and.to.be.a('string');\r",
+							"    pm.expect(responseData.name).to.exist.and.to.be.a('string');\r",
+							"    pm.expect(responseData.data).to.exist.and.to.be.an('object');\r",
+							"    pm.expect(responseData.data.year).to.exist.and.to.be.a('number');\r",
+							"    pm.expect(responseData.data.price).to.exist.and.to.be.a('number');\r",
+							"    pm.expect(responseData.data[\"CPU model\"]).to.exist.and.to.be.a('string');\r",
+							"    pm.expect(responseData.data[\"Hard disk size\"]).to.exist.and.to.be.a('string');\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{productdomain}}/{{Newlycreatedproduct}}",
+					"host": [
+						"{{productdomain}}"
+					],
+					"path": [
+						"{{Newlycreatedproduct}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete API Single product",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"  pm.expect(pm.response.code).to.equal(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"  pm.test(\"Content-Type header is application/json\", function () {\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');\r",
+							"  });\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response has the required field 'message'\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.have.property('message');\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"  pm.expect(pm.response.responseTime).to.be.below(700);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{productdomain}}/{{Newlycreatedproduct}}",
+					"host": [
+						"{{productdomain}}"
+					],
+					"path": [
+						"{{Newlycreatedproduct}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get API Single product after DELETE",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{productdomain}}/{{Newlycreatedproduct}}",
+					"host": [
+						"{{productdomain}}"
+					],
+					"path": [
+						"{{Newlycreatedproduct}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
